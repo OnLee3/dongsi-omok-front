@@ -49,13 +49,13 @@ const ALPHABETS = [
             }
         </div>
     </body>
-    <style>
+    <style define:vars={{ boardSize: BOARD_SIZE }}>
         .board {
             width: 500px;
             height: 500px;
             display: grid;
-            grid-template-columns: repeat(19, 1fr);
-            grid-template-rows: repeat(19, 1fr);
+            grid-template-columns: repeat(var(--boardSize), 1fr);
+            grid-template-rows: repeat(var(--boardSize), 1fr);
         }
         button {
             background-color: burlywood;
