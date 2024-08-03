@@ -1,0 +1,117 @@
+---
+const BOARD_SIZE = 19;
+const ALPHABETS = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+];
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Astro</title>
+    </head>
+    <body>
+        <div class="board">
+            {
+                Array.from({ length: BOARD_SIZE }, (_, i) => i + 1).map((row) =>
+                    ALPHABETS.slice(0, BOARD_SIZE).map((column) => (
+                        <button aria-label={`row:${row} col:${column}`} />
+                    )),
+                )
+            }
+        </div>
+    </body>
+    <style>
+        .board {
+            width: 500px;
+            height: 500px;
+            display: grid;
+            grid-template-columns: repeat(19, 1fr);
+            grid-template-rows: repeat(19, 1fr);
+        }
+        button {
+            background-color: burlywood;
+            border: none;
+            position: relative;
+            cursor: pointer;
+
+            &:hover {
+                opacity: 0.8;
+            }
+
+            &:active {
+                opacity: 0.5;
+            }
+
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                background-color: black;
+            }
+            &::before {
+                width: 1px;
+                height: 100%;
+                top: 0;
+            }
+            &::after {
+                height: 1px;
+                width: 100%;
+                left: 0;
+            }
+            &[aria-label*="row:1 "] {
+                &::before {
+                    top: 50%;
+                    height: 50%;
+                }
+            }
+            &[aria-label*="row:19"] {
+                &::before {
+                    height: 50%;
+                }
+            }
+            &[aria-label*="col:A"] {
+                &::after {
+                    left: 50%;
+                    width: 50%;
+                }
+            }
+            &[aria-label*="col:S"] {
+                &::after {
+                    width: 50%;
+                }
+            }
+            &:last-child::before {
+                height: 54%;
+            }
+        }
+    </style>
+</html>
