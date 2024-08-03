@@ -43,7 +43,11 @@ const ALPHABETS = [
             {
                 Array.from({ length: BOARD_SIZE }, (_, i) => i + 1).map((row) =>
                     ALPHABETS.slice(0, BOARD_SIZE).map((column) => (
-                        <button aria-label={`row:${row} col:${column}`} />
+                        <button
+                            data-row={row}
+                            data-col={column}
+                            aria-label={`row:${row} col:${column}`}
+                        />
                     )),
                 )
             }
@@ -56,19 +60,36 @@ const ALPHABETS = [
             display: grid;
             grid-template-columns: repeat(var(--boardSize), 1fr);
             grid-template-rows: repeat(var(--boardSize), 1fr);
+            background-color: burlywood;
         }
         button {
-            background-color: burlywood;
+            background-color: transparent;
             border: none;
             position: relative;
-            cursor: pointer;
-
-            &:hover {
-                opacity: 0.8;
+            &:not(:disabled) {
+                cursor: pointer;
             }
 
-            &:active {
-                opacity: 0.5;
+            &.stone {
+                border-radius: 50%;
+                &.white {
+                    background-color: white;
+                    &::before,
+                    &::after {
+                        z-index: -1;
+                    }
+                }
+                &.black {
+                    background-color: black;
+                }
+            }
+
+            &:hover:not(:disabled) {
+                background-color: hsl(30, 50%, 80%);
+            }
+
+            &:active:not(:disabled) {
+                background-color: hsl(30, 50%, 88%);
             }
 
             &::before,
@@ -87,24 +108,24 @@ const ALPHABETS = [
                 width: 100%;
                 left: 0;
             }
-            &[aria-label*="row:1 "] {
+            &[data-row="1"] {
                 &::before {
                     top: 50%;
                     height: 50%;
                 }
             }
-            &[aria-label*="row:19"] {
+            &[data-row="19"] {
                 &::before {
                     height: 50%;
                 }
             }
-            &[aria-label*="col:A"] {
+            &[data-col="A"] {
                 &::after {
                     left: 50%;
                     width: 50%;
                 }
             }
-            &[aria-label*="col:S"] {
+            &[data-col="S"] {
                 &::after {
                     width: 50%;
                 }
@@ -114,4 +135,16 @@ const ALPHABETS = [
             }
         }
     </style>
+    <script>
+        const board = document.querySelector(".board");
+        board?.addEventListener("click", (e) => {
+            const button = e.target as HTMLButtonElement;
+            const {
+                dataset: { row, col },
+            } = button;
+            button.classList.add("stone");
+            button.classList.add("black");
+            button.setAttribute("disabled", "true");
+        });
+    </script>
 </html>
