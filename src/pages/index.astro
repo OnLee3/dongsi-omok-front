@@ -142,9 +142,18 @@ const ALPHABETS = [
             const {
                 dataset: { row, col },
             } = button;
+            place_a_black_stone(button);
+        });
+
+        const place_a_black_stone = (button: HTMLButtonElement) => {
             button.classList.add("stone");
             button.classList.add("black");
             button.setAttribute("disabled", "true");
-        });
+        };
+        const place_a_white_stone = (button: HTMLButtonElement) => {
+            button.classList.add("stone");
+            button.classList.add("white");
+            button.setAttribute("disabled", "true");
+        };
     </script>
 </html>
