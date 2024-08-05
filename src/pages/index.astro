@@ -1,33 +1,5 @@
 ---
-const BOARD_SIZE = 19;
-const ALPHABETS = [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-];
+import { BOARD_SIZE, ALPHABETS } from "../constants";
 ---
 
 <html lang="en">
@@ -136,13 +108,49 @@ const ALPHABETS = [
         }
     </style>
     <script>
-        const board = document.querySelector(".board");
-        board?.addEventListener("click", (e) => {
+        import { BOARD_SIZE, ALPHABETS } from "../constants";
+        const board: Array<Array<null | "black" | "white" | "prohibit">> =
+            Array.from({ length: BOARD_SIZE }, (_) =>
+                Array.from({ length: BOARD_SIZE }, (__) => null),
+            );
+        const actions: Array<{
+            type: string;
+            item: string;
+            row: string;
+            col: string;
+        }> = [];
+        let isBlack = true;
+
+        document.querySelector(".board")?.addEventListener("click", (e) => {
             const button = e.target as HTMLButtonElement;
             const {
                 dataset: { row, col },
             } = button;
-            place_a_black_stone(button);
+            if (isBlack) {
+                place_a_black_stone(button);
+                isBlack = false;
+                board[Number(row)][
+                    ALPHABETS.findIndex((alphabet) => alphabet === col)
+                ] = "black";
+                actions.push({
+                    type: "place",
+                    item: "black",
+                    row: row!,
+                    col: col!,
+                });
+            } else {
+                place_a_white_stone(button);
+                isBlack = true;
+                board[Number(row)][
+                    ALPHABETS.findIndex((alphabet) => alphabet === col)
+                ] = "white";
+                actions.push({
+                    type: "place",
+                    item: "white",
+                    row: row!,
+                    col: col!,
+                });
+            }
         });
 
         const place_a_black_stone = (button: HTMLButtonElement) => {
