@@ -138,8 +138,8 @@ import { BOARD_SIZE, ALPHABETS } from "../constants";
                 actions.push({
                     type: "place",
                     item: "black",
-                    row: row!,
-                    col: col!,
+                    row,
+                    col,
                 });
                 if (
                     check_is_win(
@@ -158,8 +158,8 @@ import { BOARD_SIZE, ALPHABETS } from "../constants";
                 actions.push({
                     type: "place",
                     item: "white",
-                    row: row!,
-                    col: col!,
+                    row,
+                    col,
                 });
                 if (
                     check_is_win(
