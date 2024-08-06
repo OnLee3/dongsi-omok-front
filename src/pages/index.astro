@@ -13,12 +13,12 @@ import { BOARD_SIZE, ALPHABETS } from "../constants";
     <body>
         <div class="board">
             {
-                Array.from({ length: BOARD_SIZE }, (_, i) => i + 1).map((row) =>
+                Array.from({ length: BOARD_SIZE }, (_, i) => i).map((row) =>
                     ALPHABETS.slice(0, BOARD_SIZE).map((column) => (
                         <button
                             data-row={row}
                             data-col={column}
-                            aria-label={`row:${row} col:${column}`}
+                            aria-label={`row:${row + 1} col:${column}`}
                         />
                     )),
                 )
@@ -80,13 +80,13 @@ import { BOARD_SIZE, ALPHABETS } from "../constants";
                 width: 100%;
                 left: 0;
             }
-            &[data-row="1"] {
+            &[data-row="0"] {
                 &::before {
                     top: 50%;
                     height: 50%;
                 }
             }
-            &[data-row="19"] {
+            &[data-row="18"] {
                 &::before {
                     height: 50%;
                 }
@@ -126,6 +126,9 @@ import { BOARD_SIZE, ALPHABETS } from "../constants";
             const {
                 dataset: { row, col },
             } = button;
+            if (!row || !col) {
+                return;
+            }
             if (isBlack) {
                 place_a_black_stone(button);
                 isBlack = false;
@@ -138,6 +141,14 @@ import { BOARD_SIZE, ALPHABETS } from "../constants";
                     row: row!,
                     col: col!,
                 });
+                if (
+                    check_is_win(
+                        Number(row),
+                        ALPHABETS.findIndex((alphabet) => alphabet === col),
+                    )
+                ) {
+                    alert("black win!");
+                }
             } else {
                 place_a_white_stone(button);
                 isBlack = true;
@@ -150,6 +161,14 @@ import { BOARD_SIZE, ALPHABETS } from "../constants";
                     row: row!,
                     col: col!,
                 });
+                if (
+                    check_is_win(
+                        Number(row),
+                        ALPHABETS.findIndex((alphabet) => alphabet === col),
+                    )
+                ) {
+                    alert("white win!");
+                }
             }
         });
 
@@ -162,6 +181,196 @@ import { BOARD_SIZE, ALPHABETS } from "../constants";
             button.classList.add("stone");
             button.classList.add("white");
             button.setAttribute("disabled", "true");
+        };
+        const check_is_win = (row: number, col: number) => {
+            const item = board[row][col];
+            if (item === null || item === "prohibit") {
+                return false;
+            }
+            /** row 오목 체크 */
+            if (
+                board[row - 4]?.[col] === item &&
+                board[row - 3]?.[col] === item &&
+                board[row - 2]?.[col] === item &&
+                board[row - 1]?.[col] === item &&
+                board[row]?.[col] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row - 3]?.[col] === item &&
+                board[row - 2]?.[col] === item &&
+                board[row - 1]?.[col] === item &&
+                board[row]?.[col] === item &&
+                board[row + 1]?.[col] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row - 2]?.[col] === item &&
+                board[row - 1]?.[col] === item &&
+                board[row]?.[col] === item &&
+                board[row + 1]?.[col] === item &&
+                board[row + 2]?.[col] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row - 1]?.[col] === item &&
+                board[row]?.[col] === item &&
+                board[row + 1]?.[col] === item &&
+                board[row + 2]?.[col] === item &&
+                board[row + 3]?.[col] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row]?.[col] === item &&
+                board[row + 1]?.[col] === item &&
+                board[row + 2]?.[col] === item &&
+                board[row + 3]?.[col] === item &&
+                board[row + 4]?.[col] === item
+            ) {
+                return true;
+            }
+            /** col 오목 체크 */
+            if (
+                board[row][col - 4] === item &&
+                board[row][col - 3] === item &&
+                board[row][col - 2] === item &&
+                board[row][col - 1] === item &&
+                board[row][col] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row][col - 3] === item &&
+                board[row][col - 2] === item &&
+                board[row][col - 1] === item &&
+                board[row][col] === item &&
+                board[row][col + 1] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row][col - 2] === item &&
+                board[row][col - 1] === item &&
+                board[row][col] === item &&
+                board[row][col + 1] === item &&
+                board[row][col + 2] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row][col - 1] === item &&
+                board[row][col] === item &&
+                board[row][col + 1] === item &&
+                board[row][col + 2] === item &&
+                board[row][col + 3] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row][col] === item &&
+                board[row][col + 1] === item &&
+                board[row][col + 2] === item &&
+                board[row][col + 3] === item &&
+                board[row][col + 4] === item
+            ) {
+                return true;
+            }
+            /** 좌상단 -> 우하단 오목 */
+            if (
+                board[row - 4]?.[col - 4] === item &&
+                board[row - 3]?.[col - 3] === item &&
+                board[row - 2]?.[col - 2] === item &&
+                board[row - 1]?.[col - 1] === item &&
+                board[row][col] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row - 3]?.[col - 3] === item &&
+                board[row - 2]?.[col - 2] === item &&
+                board[row - 1]?.[col - 1] === item &&
+                board[row][col] === item &&
+                board[row + 1]?.[col + 1] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row - 2]?.[col - 2] === item &&
+                board[row - 1]?.[col - 1] === item &&
+                board[row][col] === item &&
+                board[row + 1]?.[col + 1] === item &&
+                board[row + 2]?.[col + 2] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row - 1]?.[col - 1] === item &&
+                board[row][col] === item &&
+                board[row + 1]?.[col + 1] === item &&
+                board[row + 2]?.[col + 2] === item &&
+                board[row + 3]?.[col + 3] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row][col] === item &&
+                board[row + 1]?.[col + 1] === item &&
+                board[row + 2]?.[col + 2] === item &&
+                board[row + 3]?.[col + 3] === item &&
+                board[row + 4]?.[col + 4] === item
+            ) {
+                return true;
+            }
+            /** 좌하단 -> 우상단 오목 */
+            if (
+                board[row + 4]?.[col - 4] === item &&
+                board[row + 3]?.[col - 3] === item &&
+                board[row + 2]?.[col - 2] === item &&
+                board[row + 1]?.[col - 1] === item &&
+                board[row][col] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row + 3]?.[col - 3] === item &&
+                board[row + 2]?.[col - 2] === item &&
+                board[row + 1]?.[col - 1] === item &&
+                board[row][col] === item &&
+                board[row - 1]?.[col + 1] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row + 2]?.[col - 2] === item &&
+                board[row + 1]?.[col - 1] === item &&
+                board[row][col] === item &&
+                board[row - 1]?.[col + 1] === item &&
+                board[row - 2]?.[col + 2] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row + 1]?.[col - 1] === item &&
+                board[row][col] === item &&
+                board[row - 1]?.[col + 1] === item &&
+                board[row - 2]?.[col + 2] === item &&
+                board[row - 3]?.[col + 3] === item
+            ) {
+                return true;
+            }
+            if (
+                board[row][col] === item &&
+                board[row - 1]?.[col + 1] === item &&
+                board[row - 2]?.[col + 2] === item &&
+                board[row - 3]?.[col + 3] === item &&
+                board[row - 4]?.[col + 4] === item
+            ) {
+                return true;
+            }
         };
     </script>
 </html>
