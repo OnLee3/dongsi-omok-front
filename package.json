@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "dev:ws": "node server/index.js",
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
@@ -12,6 +13,7 @@
   "dependencies": {
     "astro": "^4.13.1",
     "@astrojs/check": "^0.9.1",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "ws": "^8.18.0"
   }
 }

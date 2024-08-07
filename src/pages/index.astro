@@ -130,6 +130,7 @@ import { BOARD_SIZE, ALPHABETS } from "../constants";
                 return;
             }
             if (isBlack) {
+                socket.send("place a black stone");
                 place_a_black_stone(button);
                 isBlack = false;
                 board[Number(row)][
@@ -151,6 +152,7 @@ import { BOARD_SIZE, ALPHABETS } from "../constants";
                     alert("black win!");
                 }
             } else {
+                socket.send("place a white stone");
                 place_a_white_stone(button);
                 isBlack = true;
                 board[Number(row)][
@@ -183,6 +185,15 @@ import { BOARD_SIZE, ALPHABETS } from "../constants";
             button.classList.add("stone");
             button.classList.add("white");
             button.setAttribute("disabled", "true");
+        };
+
+        /** 웹소켓 */
+        const socket = new WebSocket("ws://localhost:8080");
+        socket.onopen = (e) => {
+            console.log("socketConnetcted");
+        };
+        socket.onmessage = (event) => {
+            console.log(event);
         };
     </script>
 </html>
