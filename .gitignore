@@ -1,12 +1,12 @@
-node_modules
-
 # build output
 dist/
 # generated types
-.astro/
+front-end/.astro/
 
 # dependencies
+node_modules
 front-end/node_modules/
+back-end/node_modules/
 
 # logs
 npm-debug.log*
